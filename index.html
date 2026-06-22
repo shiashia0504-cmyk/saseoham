@@ -20,8 +20,8 @@
      ===================================================== -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://dtszsdajbfdcpjajajfg.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0c3pzZGFqYmZkY3BqYWphamZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNzQ3OTcsImV4cCI6MjA5NzY1MDc5N30.p_WKuCk5BT5SaPE9aB2J2utCENRoythHgFd1oWsGvY8';
+  const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
   const supabaseClient = (SUPABASE_URL.startsWith('YOUR_'))
     ? null
     : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -634,11 +634,29 @@
   .period-section{margin-bottom:16px;}
   .period-list{display:flex;flex-direction:column;gap:8px;}
   .period-bar{
+    position:relative;
     background:var(--beige-card);
     border:1px solid var(--line);
     border-radius:12px;
-    padding:10px 13px;
+    padding:10px 13px 10px 24px;
     cursor:pointer;
+    overflow:hidden;
+  }
+  .period-bar::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:9px;
+    background:var(--green-deep);
+  }
+  .period-bar[data-major="personal"]::before{background:var(--terracotta);}
+  .period-bar::after{
+    content:"";
+    position:absolute;
+    left:2.5px; top:13px;
+    width:4px;height:4px;border-radius:50%;
+    background:var(--beige-card);
+    box-shadow:0 16px 0 var(--beige-card), 0 32px 0 var(--beige-card);
   }
   .period-bar-top{
     display:flex;
@@ -869,6 +887,58 @@
   .morning-card .hint.placeholder{color:#9aa295;}
   .morning-card .confirm-add-btn:disabled{opacity:0.4;cursor:not-allowed;}
 
+  .timer-display{
+    font-family:'Noto Serif KR',serif;
+    font-size:42px;
+    font-weight:900;
+    text-align:center;
+    color:var(--green-deep);
+    margin:18px 0 22px;
+    letter-spacing:0.02em;
+  }
+  .attend-check{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:center;
+    font-size:13px;
+    color:var(--green-ink);
+    font-weight:600;
+    background:rgba(46,90,68,0.06);
+    border-radius:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    margin-bottom:18px;
+  }
+  .attend-check input{width:16px;height:16px;accent-color:var(--green-deep);cursor:pointer;}
+  .reward-popup{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%) scale(0.8);
+    background:var(--mustard);
+    color:var(--green-ink);
+    font-weight:900;
+    font-size:16px;
+    padding:14px 22px;
+    border-radius:14px;
+    box-shadow:0 14px 34px -10px rgba(0,0,0,0.4);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:5;
+  }
+  .reward-popup.show{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  .skip-timer-link{
+    display:block;
+    text-align:center;
+    font-size:10.5px;
+    color:#a9b0a3;
+    margin-top:4px;
+  }
+
   .evening-banner{
     background:rgba(227,168,87,0.2);
     border:1px dashed var(--mustard);
@@ -1091,6 +1161,110 @@
     opacity:0.45;
     cursor:not-allowed;
     position:relative;
+  }
+
+  .kcal-goal-row{
+    display:flex;
+    align-items:baseline;
+    gap:4px;
+    margin:6px 0 12px;
+  }
+  .kcal-goal-row .bb-num{
+    font-family:'Noto Serif KR',serif;
+    font-size:22px;
+    font-weight:900;
+    color:var(--green-ink);
+  }
+  .kcal-goal-row .bb-sub{font-size:12px;color:var(--muted);}
+
+  .csv-upload-box{
+    background:rgba(217,107,67,0.07);
+    border:1.5px dashed var(--terracotta);
+    border-radius:12px;
+    padding:13px 14px;
+  }
+  .csv-format-hint{
+    font-size:10.5px;
+    line-height:1.6;
+    color:var(--muted);
+    margin:0 0 10px;
+  }
+  .csv-format-hint code{
+    background:rgba(46,90,68,0.08);
+    padding:1px 4px;
+    border-radius:4px;
+    font-size:10px;
+  }
+  #mealCsvInput{
+    width:100%;
+    font-size:11.5px;
+    color:var(--green-deep);
+  }
+  .csv-upload-result{
+    margin-top:8px;
+    font-size:11px;
+    color:var(--green-deep);
+    font-weight:600;
+  }
+
+  .meal-edit-list{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin-bottom:10px;
+  }
+  .meal-edit-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--beige);
+    border-radius:8px;
+    padding:7px 10px;
+    font-size:11.5px;
+  }
+  .meal-edit-item.is-allergy{color:#c0392b;}
+  .meal-edit-item button{
+    border:none;background:none;color:var(--muted);font-size:12px;cursor:pointer;
+  }
+  .meal-edit-item button:hover{color:var(--terracotta);}
+
+  .school-meal-box{
+    background:rgba(46,90,68,0.05);
+    border-radius:12px;
+    padding:12px 13px;
+    margin-bottom:14px;
+  }
+  .meal-check-list{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .meal-check-item{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:12.5px;
+    color:var(--green-ink);
+  }
+  .meal-check-item input{width:15px;height:15px;accent-color:var(--green-deep);cursor:pointer;}
+  .meal-check-item.allergy{color:#c0392b;}
+  .meal-check-item.allergy input{cursor:not-allowed;}
+  .meal-check-item .mc-kcal{margin-left:auto;font-size:10.5px;color:var(--muted);}
+  .meal-check-item.allergy .mc-kcal{color:#c0392b;}
+  .meal-check-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:11.5px;
+    color:var(--green-deep);
+    border-top:1px dashed var(--line);
+    padding-top:10px;
+  }
+  .meal-check-foot button{
+    border:none;
+    background:var(--green-deep);
+    color:var(--beige-card);
+    font-size:11px;
+    font-weight:700;
+    padding:7px 11px;
+    border-radius:8px;
+    cursor:pointer;
   }
 
   .all-day-note{
@@ -1645,7 +1819,7 @@
   <div class="period-section" id="periodSection">
     <div class="period-section-head">
       <div class="log-section-title" style="margin-bottom:0;">기간형 일정</div>
-      <button class="archive-toggle" id="archiveToggleBtn">📁 보관함 (<span id="archiveCount">0</span>)</button>
+      <button class="archive-toggle" id="archiveToggleBtn">📁 서고 (<span id="archiveCount">0</span>)</button>
     </div>
     <div class="period-list" id="periodList"></div>
     <div class="archive-list" id="archiveList" style="display:none;"></div>
@@ -1764,6 +1938,52 @@
       <!-- 식단 기록: 시간 제한 없이 하루 종일 -->
       <div class="log-card" id="dietCard">
         <div class="log-section-title">🍽 식단 기록 <span class="all-day-note">하루 종일 언제든 기록해요</span></div>
+
+        <div class="kcal-goal-row">
+          <span class="bb-num" id="kcalTodayTotal">0</span>
+          <span class="bb-sub">/ <span id="kcalGoal">1,400</span>kcal</span>
+        </div>
+
+        <button class="add-sched-toggle" id="mealEditToggle">✏️ 급식 메뉴 입력/수정</button>
+        <div class="add-schedule-card" id="mealEditCard" style="display:none;">
+
+          <div class="csv-upload-box">
+            <div class="log-section-title" style="margin-bottom:6px;">📤 CSV 파일로 한번에 올리기</div>
+            <p class="csv-format-hint">
+              형식: <code>date,name,kcal</code> (헤더 한 줄 + 메뉴별 한 줄씩, 같은 날짜는 여러 줄)<br>
+              알러지 메뉴는 이름에 <code>(알러지주의)</code>를 포함해서 적어주세요.<br>
+              예) <code>2026-06-23,제육볶음,350</code> / <code>2026-06-23,땅콩조림 (알러지주의),120</code>
+            </p>
+            <input type="file" id="mealCsvInput" accept=".csv,text/csv">
+            <div class="csv-upload-result" id="csvUploadResult"></div>
+          </div>
+
+          <div class="log-section-title" style="margin:14px 0 8px;">또는 하나씩 직접 입력</div>
+          <input type="date" id="mealEditDate">
+
+          <div class="meal-edit-list" id="mealEditList"></div>
+
+          <div class="amount-row">
+            <input type="text" id="mealNewName" placeholder="메뉴 이름 (예: 제육볶음)">
+            <input type="number" id="mealNewKcal" placeholder="kcal" inputmode="numeric" style="max-width:90px;flex:none;">
+          </div>
+          <label class="attend-check" style="margin:10px 0;">
+            <input type="checkbox" id="mealNewAllergy">
+            <span>🚨 알러지 주의 메뉴</span>
+          </label>
+          <button class="confirm-add-btn" id="mealAddItemBtn" style="margin-bottom:10px;background:var(--terracotta);">+ 메뉴 추가</button>
+          <button class="confirm-add-btn" id="mealSaveBtn">이 날짜로 저장하기</button>
+        </div>
+
+        <div class="school-meal-box" id="schoolMealBox" style="display:none;">
+          <div class="log-section-title" style="margin-bottom:8px;">오늘의 급식 메뉴</div>
+          <div class="meal-check-list" id="mealCheckList"></div>
+          <div class="meal-check-foot">
+            <span>체크한 메뉴 합계: <b id="mealCheckedKcal">0</b>kcal</span>
+            <button id="addMealCheckBtn">급식 기록 추가</button>
+          </div>
+        </div>
+
         <div class="log-btn-row three" id="dietCatRow">
           <button class="log-btn clean" data-cat="clean">🥗 클린</button>
           <button class="log-btn normal" data-cat="normal">🍚 급식일반</button>
@@ -1891,26 +2111,42 @@
       <span>AM · 출근 모드</span>
       <span class="rule"></span>
     </div>
-    <h1>좋은 아침이에요.<br>일단 한 모금부터.</h1>
-    <p class="sub">눈뜨면 딴생각 말고 이 버튼 하나만 누르세요.</p>
-    <button class="coffee-btn" id="morningCoffeeBtn">☕ 커피 머신 앞으로 직행</button>
 
-    <div class="step2-eyebrow">
-      <span class="dot"></span>
-      <span>STEP 2 · 컨디션 도장 찍기</span>
-      <span class="rule"></span>
+    <div id="morningStep1">
+      <h1>좋은 아침이에요.<br>일단 한 모금부터.</h1>
+      <p class="sub">눈뜨면 딴생각 말고 이 버튼 하나만 누르세요.</p>
+      <button class="coffee-btn" id="morningCoffeeBtn">☕ 커피 머신 앞으로 직행</button>
     </div>
 
-    <div class="battery-row" id="morningBatteryRow">
-      <button class="stamp" data-pct="20"><span class="pct">20%</span><span class="label">방전</span></button>
-      <button class="stamp" data-pct="50"><span class="pct">50%</span><span class="label">보통</span></button>
-      <button class="stamp" data-pct="80"><span class="pct">80%</span><span class="label">충전</span></button>
-      <button class="stamp" data-pct="100"><span class="pct">100%</span><span class="label">완충</span></button>
+    <div id="morningStep2" style="display:none;">
+      <h1 style="font-size:18px;">커피 내려지는 동안<br>잠깐 머물러요.</h1>
+      <div class="timer-display" id="timerDisplay">10:00</div>
+      <label class="attend-check">
+        <input type="checkbox" id="attendCheckbox">
+        <span>매일 출석 체크 &amp; 퀴즈 풀기</span>
+      </label>
+      <div class="reward-popup" id="rewardPopup">🎉 5,000원 절약!</div>
+      <a href="#" class="skip-timer-link" id="skipTimerLink">⏩ 테스트: 타이머 바로 종료</a>
     </div>
 
-    <div class="hint placeholder" id="morningHint">배터리를 선택하면 오늘 할 일이 자동으로 정리돼요.</div>
+    <div id="morningStep3" style="display:none;">
+      <div class="step2-eyebrow">
+        <span class="dot"></span>
+        <span>STEP 3 · 컨디션 도장 찍기</span>
+        <span class="rule"></span>
+      </div>
 
-    <button class="confirm-add-btn" id="morningConfirmBtn" disabled>오늘 시작하기</button>
+      <div class="battery-row" id="morningBatteryRow">
+        <button class="stamp" data-pct="20"><span class="pct">20%</span><span class="label">방전</span></button>
+        <button class="stamp" data-pct="50"><span class="pct">50%</span><span class="label">보통</span></button>
+        <button class="stamp" data-pct="80"><span class="pct">80%</span><span class="label">충전</span></button>
+        <button class="stamp" data-pct="100"><span class="pct">100%</span><span class="label">완충</span></button>
+      </div>
+
+      <div class="hint placeholder" id="morningHint">배터리를 선택하면 오늘 할 일이 자동으로 정리돼요.</div>
+
+      <button class="confirm-add-btn" id="morningConfirmBtn" disabled>오늘 시작하기</button>
+    </div>
   </div>
 </div>
 
@@ -1938,8 +2174,8 @@
     <button id="addStageBtn">+ 히스토리 추가하기</button>
   </div>
 
-  <button class="archive-btn" id="archiveBtn" style="display:none;">📁 완전 종료하고 보관함으로</button>
-  <button class="restore-btn" id="restoreBtn" style="display:none;">↩ 보관함에서 꺼내 다시 진행하기</button>
+  <button class="archive-btn" id="archiveBtn" style="display:none;">📁 이 프로젝트 서고로 이관하기</button>
+  <button class="restore-btn" id="restoreBtn" style="display:none;">↩ 서고에서 다시 꺼내 진행하기</button>
 </div>
 
 <script>
@@ -2112,7 +2348,7 @@
     }));
 
     dietLogs = dietRows.map(d=>({
-      id:d.id, t:new Date(d.created_at||d.date).getTime(),
+      id:d.id, t:new Date(d.created_at||d.date).getTime(), date:d.date,
       label: d.category==='clean'?'🥗 클린 식단': d.category==='heavy'?'🍕 도파민헤비':'🍚 급식일반',
       amount:d.kcal
     }));
@@ -2243,6 +2479,7 @@
     renderWallet();
     if(typeof renderExerciseToday === 'function') renderExerciseToday();
     if(typeof renderWeekendTab === 'function') renderWeekendTab();
+    if(typeof loadSchoolMeal === 'function') loadSchoolMeal();
   }
 
   function openWeekendOverlay(dayKey){
@@ -2356,9 +2593,53 @@
       document.getElementById('morningConfirmBtn').disabled = false;
     });
   });
-  document.getElementById('morningCoffeeBtn').addEventListener('click', (e)=>{
-    e.target.textContent = '☕ 좋아요, 마셨어요';
+  let morningTimerInterval = null;
+  let attendChecked = false;
+
+  function startMorningTimer(){
+    document.getElementById('morningStep1').style.display = 'none';
+    document.getElementById('morningStep2').style.display = 'block';
+    let remaining = 600; // 10분 = 600초
+    const display = document.getElementById('timerDisplay');
+    function tick(){
+      const m = Math.floor(remaining/60), s = remaining%60;
+      display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if(remaining<=0){
+        clearInterval(morningTimerInterval);
+        morningTimerInterval = null;
+        goToBatteryStep();
+        return;
+      }
+      remaining--;
+    }
+    tick();
+    morningTimerInterval = setInterval(tick, 1000);
+  }
+
+  function goToBatteryStep(){
+    document.getElementById('morningStep2').style.display = 'none';
+    document.getElementById('morningStep3').style.display = 'block';
+  }
+
+  document.getElementById('morningCoffeeBtn').addEventListener('click', ()=>{
+    startMorningTimer();
   });
+
+  document.getElementById('attendCheckbox').addEventListener('change', (e)=>{
+    if(e.target.checked && !attendChecked){
+      attendChecked = true;
+      const popup = document.getElementById('rewardPopup');
+      popup.classList.add('show');
+      setTimeout(()=>popup.classList.remove('show'), 1800);
+    }
+  });
+
+  document.getElementById('skipTimerLink').addEventListener('click', (e)=>{
+    e.preventDefault();
+    if(morningTimerInterval) clearInterval(morningTimerInterval);
+    goToBatteryStep();
+  });
+
   document.getElementById('morningConfirmBtn').addEventListener('click', async ()=>{
     if(pendingMorningPct===null) return;
     const dayKey = appDayKey(testNow);
@@ -2547,7 +2828,7 @@
     list.innerHTML = '';
     const archived = periodEvents.filter(p=>p.archived);
     if(archived.length===0){
-      list.innerHTML = '<div class="bank-empty" style="color:var(--muted);border-color:var(--line);">보관함이 비어있어요.</div>';
+      list.innerHTML = '<div class="bank-empty" style="color:var(--muted);border-color:var(--line);">서고가 비어있어요.</div>';
       return;
     }
     archived.forEach(p=> list.appendChild(buildPeriodBar(p, true)));
@@ -3281,6 +3562,10 @@
     }
 
     // 식단 피드 (하루 종일, 퇴근 에너지와 무관)
+    const todayDietTotal = dietLogs.filter(l=>l.date===todayKey).reduce((s,l)=>s+l.amount,0);
+    document.getElementById('kcalTodayTotal').textContent = todayDietTotal.toLocaleString();
+    document.getElementById('kcalGoal').textContent = BASE_KCAL.toLocaleString();
+
     const dietFeed = document.getElementById('dietFeed');
     dietFeed.innerHTML = '';
     if(dietLogs.length===0){
@@ -3532,6 +3817,261 @@
   });
 
   const dietLabels = {clean:'🥗 클린 식단', normal:'🍚 급식일반', heavy:'🍕 도파민헤비'};
+
+  // ---- 급식 메뉴 CSV 파일 업로드 ----
+  function parseMealCsv(text){
+    const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
+    if(lines.length<2) return {};
+    const header = lines[0].split(',').map(h=>h.trim().toLowerCase());
+    const dateIdx = header.indexOf('date');
+    const nameIdx = header.indexOf('name');
+    const kcalIdx = header.indexOf('kcal');
+    if(dateIdx===-1 || nameIdx===-1 || kcalIdx===-1){
+      throw new Error('헤더에 date,name,kcal가 모두 있어야 해요');
+    }
+    const byDate = {};
+    for(let i=1;i<lines.length;i++){
+      const cols = lines[i].split(',').map(c=>c.trim());
+      const date = cols[dateIdx];
+      const name = cols[nameIdx];
+      const kcal = Number(cols[kcalIdx]);
+      if(!date || !name || !kcal) continue;
+      if(!byDate[date]) byDate[date] = [];
+      byDate[date].push({name, kcal});
+    }
+    return byDate;
+  }
+
+  async function importMealsByDate(byDate){
+    const dates = Object.keys(byDate);
+    let successCount = 0;
+    for(const date of dates){
+      const saved = await dbUpsert('school_meals', { date, menu_items: byDate[date] }, 'date');
+      if(saved) successCount++;
+      if(date === appDayKey(testNow)){
+        todaySchoolMeal = { date, menu_items: byDate[date] };
+        renderSchoolMeal();
+      }
+    }
+    return successCount;
+  }
+
+  document.getElementById('mealCsvInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const resultBox = document.getElementById('csvUploadResult');
+    resultBox.textContent = '읽는 중...';
+    try{
+      const text = await file.text();
+      const byDate = parseMealCsv(text);
+      const dateCount = Object.keys(byDate).length;
+      if(dateCount===0){ resultBox.textContent = '⚠️ 읽을 수 있는 데이터가 없어요. 형식을 확인해주세요.'; return; }
+      if(!isLive()){
+        resultBox.textContent = `📄 ${dateCount}일치 메뉴를 읽었어요. (로그인 후에만 실제 저장돼요 — 지금은 미리보기만)`;
+        const firstDate = Object.keys(byDate)[0];
+        if(firstDate === appDayKey(testNow)){
+          todaySchoolMeal = { date:firstDate, menu_items: byDate[firstDate] };
+          renderSchoolMeal();
+        }
+        return;
+      }
+      const successCount = await importMealsByDate(byDate);
+      resultBox.textContent = `✅ ${successCount}일치 메뉴 업로드 완료!`;
+      e.target.value = '';
+    } catch(err){
+      resultBox.textContent = `⚠️ ${err.message}`;
+    }
+  });
+
+  // ---- 깃허브 저장소에 함께 올려둔 meals.csv 자동 인식 (선택) ----
+  // index.html과 같은 폴더에 meals.csv를 커밋해두면, Supabase에 그날 데이터가
+  // 없을 때 이 파일에서 자동으로 오늘 메뉴를 찾아서 보여줘요.
+  async function tryLoadMealsCsvFile(dateKey){
+    try{
+      const res = await fetch('./meals.csv', { cache:'no-store' });
+      if(!res.ok) return null;
+      const text = await res.text();
+      const byDate = parseMealCsv(text);
+      return byDate[dateKey] || null;
+    } catch(err){
+      return null; // 파일이 없거나 file:// 로컬 실행 중이면 그냥 조용히 무시
+    }
+  }
+
+  // ---- 급식 메뉴 직접 입력/수정 ----
+  let mealEditItems = [];
+
+  async function fetchMealFor(dateKey){
+    if(isLive()){
+      const { data, error } = await supabaseClient.from('school_meals').select('*').eq('date', dateKey).maybeSingle();
+      return (!error && data) ? data.menu_items : [];
+    }
+    return (dateKey===appDayKey(testNow) && todaySchoolMeal) ? todaySchoolMeal.menu_items.slice() : [];
+  }
+
+  function renderMealEditList(){
+    const list = document.getElementById('mealEditList');
+    if(mealEditItems.length===0){
+      list.innerHTML = '<div class="linked-empty">아직 추가한 메뉴가 없어요.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    mealEditItems.forEach((item, idx)=>{
+      const isAllergy = item.name.includes(ALLERGY_FLAG);
+      const row = document.createElement('div');
+      row.className = 'meal-edit-item' + (isAllergy ? ' is-allergy' : '');
+      row.innerHTML = `<span>${item.name} · ${item.kcal}kcal</span><button data-idx="${idx}">✕</button>`;
+      row.querySelector('button').addEventListener('click', ()=>{
+        mealEditItems.splice(idx,1);
+        renderMealEditList();
+      });
+      list.appendChild(row);
+    });
+  }
+
+  document.getElementById('mealEditToggle').addEventListener('click', async ()=>{
+    const card = document.getElementById('mealEditCard');
+    const opening = card.style.display === 'none';
+    card.style.display = opening ? 'flex' : 'none';
+    if(opening){
+      const dateInput = document.getElementById('mealEditDate');
+      if(!dateInput.value) dateInput.value = appDayKey(testNow);
+      mealEditItems = await fetchMealFor(dateInput.value);
+      renderMealEditList();
+    }
+  });
+
+  document.getElementById('mealEditDate').addEventListener('change', async (e)=>{
+    mealEditItems = await fetchMealFor(e.target.value);
+    renderMealEditList();
+  });
+
+  document.getElementById('mealAddItemBtn').addEventListener('click', ()=>{
+    const nameInput = document.getElementById('mealNewName');
+    const kcalInput = document.getElementById('mealNewKcal');
+    const allergyBox = document.getElementById('mealNewAllergy');
+    let name = nameInput.value.trim();
+    const kcal = Number(kcalInput.value);
+    if(!name){ alert('메뉴 이름을 적어주세요'); return; }
+    if(!kcal || kcal<=0){ alert('칼로리를 입력해주세요'); return; }
+    if(allergyBox.checked && !name.includes(ALLERGY_FLAG)){
+      name = `${name} (${ALLERGY_FLAG})`;
+    }
+    mealEditItems.push({name, kcal});
+    nameInput.value=''; kcalInput.value=''; allergyBox.checked=false;
+    renderMealEditList();
+  });
+
+  document.getElementById('mealSaveBtn').addEventListener('click', async ()=>{
+    const dateKey = document.getElementById('mealEditDate').value || appDayKey(testNow);
+    if(mealEditItems.length===0){ alert('메뉴를 하나 이상 추가해주세요'); return; }
+    if(!isLive()){
+      alert('로그인 상태가 아니라 미리보기만 가능해요. Supabase 연결 후 로그인하면 실제 저장돼요.');
+    }
+    const saved = await dbUpsert('school_meals', { date:dateKey, menu_items:mealEditItems }, 'date');
+    if(dateKey === appDayKey(testNow)){
+      todaySchoolMeal = { date:dateKey, menu_items:mealEditItems.slice() };
+      renderSchoolMeal();
+    }
+    document.getElementById('mealEditCard').style.display = 'none';
+    if(isLive() && saved) alert('급식 메뉴가 저장됐어요!');
+  });
+
+
+  let todaySchoolMeal = null; // {date, menu_items:[{name,kcal}]}
+  const ALLERGY_FLAG = '알러지주의';
+
+  async function loadSchoolMeal(){
+    const dateKey = appDayKey(testNow);
+    let found = null;
+
+    if(isLive()){
+      const { data, error } = await supabaseClient.from('school_meals').select('*').eq('date', dateKey).maybeSingle();
+      if(!error && data) found = data.menu_items;
+    }
+    if(!found){
+      found = await tryLoadMealsCsvFile(dateKey);
+    }
+
+    if(found){
+      todaySchoolMeal = { date: dateKey, menu_items: found };
+    } else if(!isLive()){
+      // 데모용 샘플 메뉴 (Supabase 미연결 + meals.csv도 없을 때 흐름 확인용)
+      todaySchoolMeal = {
+        date: dateKey,
+        menu_items: [
+          {name:'백미밥', kcal:300},
+          {name:'된장국', kcal:80},
+          {name:'제육볶음', kcal:350},
+          {name:'땅콩조림 (알러지주의)', kcal:120},
+          {name:'배추김치', kcal:30},
+        ]
+      };
+    } else {
+      todaySchoolMeal = null;
+    }
+    renderSchoolMeal();
+  }
+
+  function renderSchoolMeal(){
+    const box = document.getElementById('schoolMealBox');
+    const list = document.getElementById('mealCheckList');
+    if(!todaySchoolMeal || !todaySchoolMeal.menu_items || todaySchoolMeal.menu_items.length===0){
+      box.style.display = 'none';
+      return;
+    }
+    box.style.display = 'block';
+    list.innerHTML = '';
+    todaySchoolMeal.menu_items.forEach((item, idx)=>{
+      const isAllergy = (item.name||'').includes(ALLERGY_FLAG);
+      const row = document.createElement('label');
+      row.className = 'meal-check-item' + (isAllergy ? ' allergy' : '');
+      row.innerHTML = `
+        <input type="checkbox" data-idx="${idx}" ${isAllergy ? 'disabled' : ''}>
+        <span>${item.name}</span>
+        <span class="mc-kcal">${item.kcal}kcal${isAllergy ? ' · 체크 불가' : ''}</span>
+      `;
+      row.querySelector('input').addEventListener('change', updateMealCheckedSum);
+      list.appendChild(row);
+    });
+    updateMealCheckedSum();
+  }
+
+  function updateMealCheckedSum(){
+    const checks = document.querySelectorAll('#mealCheckList input[type="checkbox"]:checked');
+    let sum = 0;
+    checks.forEach(c=>{
+      const idx = Number(c.dataset.idx);
+      sum += todaySchoolMeal.menu_items[idx].kcal;
+    });
+    document.getElementById('mealCheckedKcal').textContent = sum.toLocaleString();
+  }
+
+  document.getElementById('addMealCheckBtn').addEventListener('click', async ()=>{
+    const checks = document.querySelectorAll('#mealCheckList input[type="checkbox"]:checked');
+    if(checks.length===0){ alert('먹은 메뉴를 체크해주세요'); return; }
+    let sum = 0;
+    const names = [];
+    checks.forEach(c=>{
+      const idx = Number(c.dataset.idx);
+      const item = todaySchoolMeal.menu_items[idx];
+      sum += item.kcal;
+      names.push(item.name);
+    });
+    loggingSkipped = false;
+    const logDate = appDayKey(testNow);
+    const log = {kind:'diet', t:Date.now(), date:logDate, label:`🍚 급식 · ${names.join(', ')}`, amount:sum};
+    dietLogs.push(log);
+    checks.forEach(c=>{ c.checked = false; });
+    updateMealCheckedSum();
+    renderWallet();
+    const saved = await dbInsert('diet_logs', {
+      user_id:currentUserId, date:logDate, category:'normal', kcal:sum,
+      note:names.join(', ')
+    });
+    if(saved){ log.id = saved.id; log.t = new Date(saved.created_at).getTime(); renderWallet(); }
+  });
+
   let selectedDietCat = null;
   document.querySelectorAll('#dietCatRow .log-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
@@ -3547,12 +4087,13 @@
     if(!selectedDietCat){ alert('식단 분류를 먼저 골라주세요'); return; }
     if(!amount || amount<=0){ alert('칼로리를 입력해주세요'); return; }
     loggingSkipped = false;
-    const log = {kind:'diet', t:Date.now(), label:dietLabels[selectedDietCat], amount};
+    const logDate = appDayKey(testNow);
+    const log = {kind:'diet', t:Date.now(), date:logDate, label:dietLabels[selectedDietCat], amount};
     dietLogs.push(log);
     input.value = '';
     renderWallet();
     const saved = await dbInsert('diet_logs', {
-      user_id:currentUserId, date:todayStr, category:selectedDietCat, kcal:amount
+      user_id:currentUserId, date:logDate, category:selectedDietCat, kcal:amount
     });
     if(saved){ log.id = saved.id; log.t = new Date(saved.created_at).getTime(); renderWallet(); }
   });
